@@ -1,0 +1,47 @@
+﻿@model GestaoEstudantil.Models.Disciplina
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+    <div class="col-9">
+        <h2>@ViewBag.pageContex</h2>
+    </div>
+</div>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CodigoDisciplina)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CodigoDisciplina)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ProfessorId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ProfessorId)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        @Html.ActionLink("Voltar", "Index", "Disciplinas", new { @class = "btn" })
+        @Html.ActionLink("Editar", "Edit", "Disciplinas", new { id = Model.Id }, new { @class = "btn btn-secondary" })
+    </div>
+</p>

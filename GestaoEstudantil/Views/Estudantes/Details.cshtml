@@ -1,0 +1,207 @@
+﻿@model GestaoEstudantil.Models.Estudante
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+    <div class="col-9">
+        <h2>@ViewBag.pageContex</h2>
+    </div>
+</div>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Curso.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Curso.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NomeCompleto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NomeCompleto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DataNascimento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DataNascimento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumeroBI)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumeroBI)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmailEstudante)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmailEstudante)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        @Html.ActionLink("Voltar", "Index", "Estudantes", new { @class = "btn" })
+        @Html.ActionLink("Editar", "Edit", "Estudantes", new { id = Model.Id }, new { @class = "btn btn-secondary" })
+        @Html.ActionLink("Relatório do Estudante", "EstudanteRelatorio", "Estudantes", new { id = Model.Id }, new { @class = "btn btn-info" })
+    </div>
+</p>
+
+
+<h2>Disciplinas</h2>
+@using (Html.BeginForm("AdicionarDisciplina", "Estudantes", FormMethod.Post, new { id = "disciplinaForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.HiddenFor(model => model.Id, new { id = "id_estudante" })
+        <div class="form-group row mb-2">
+            <div class="col-md-2">
+                <label for="Disciplina_Id">Disciplina</label>
+            </div>
+            <div class="col-md-8">
+                @Html.DropDownList("Disciplinas_list", (IEnumerable<SelectListItem>)ViewBag.Disciplinas_list, "Selecione uma Disciplina", new { @class = "form-select" })
+            </div>
+            <div class="col-md-2">
+                <input type="submit" value="Adicionar" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<br />
+<div id="disciplinasTable"></div>
+
+    @section scripts {
+        <script>
+            const formulario = document.getElementById('disciplinaForm').addEventListener('submit', async function (event) {
+                event.preventDefault(); // Evita o envio padrão do formulário
+
+                const estudanteId = document.getElementById('id_estudante').value;
+                const disciplinaId = document.getElementById('Disciplinas_list').value;
+
+
+                try {
+                    const response = await fetch('/Estudantes/AdicionarDisciplina', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            estudanteId: estudanteId,
+                            disciplinaId: disciplinaId
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status === "success") {
+                        getEstudanteResume(estudanteId);
+                    } else {
+                        alert(result.message);
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    alert("Ocorreu um erro ao processar sua solicitação.");
+                }
+            });
+
+            async function removerDisciplina(disciplina, estudante) {
+                try {
+                    const response = await fetch('/Estudantes/RemoverDisciplina', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            estudanteId: estudante,
+                            disciplinaId: disciplina
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.status === "success") {
+                        getEstudanteResume(estudante);
+                    } else {
+                        alert(result.message);
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    alert("Ocorreu um erro ao processar sua solicitação.");
+                }
+            }
+
+            async function getEstudanteResume(estudanteId) {
+                try {
+                    const response = await fetch(`/Estudantes/EstudanteResume/${estudanteId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+
+                    const data = await response.json();
+                    console.log(data);
+
+                    // Exibir as disciplinas
+                    displayDisciplinas(data.disciplinas);
+                } catch (error) {
+                    console.error('Erro:', error);
+                    alert("Ocorreu um erro ao buscar as disciplinas do estudante.");
+                }
+            }
+
+            function displayDisciplinas(disciplinas) {
+                const table = document.getElementById('disciplinasTable');
+                table.innerHTML = '';
+                disciplinas.forEach(disciplina => {
+                    const row = document.createElement('tr');
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = disciplina.Nome;
+                    nameCell.style = "width:90%"; // Adiciona a largura aqui 
+
+                    const selectCell = document.createElement('td');
+                    const selectButton = document.createElement('button');
+                    selectButton.textContent = 'Eliminar';
+                    selectButton.className = 'btn btn-danger'; // Adiciona a classe aqui 
+                    selectButton.addEventListener('click', async function () {
+                        await removerDisciplina(disciplina.Id, document.getElementById('id_estudante').value)
+                    });
+                    selectCell.appendChild(selectButton);
+                    row.appendChild(nameCell);
+                    row.appendChild(selectCell);
+                    table.appendChild(row);
+                });
+            }
+
+            // Exemplo de uso
+            document.addEventListener('DOMContentLoaded', function () {
+                const estudanteId = document.getElementById('id_estudante').value;
+                getEstudanteResume(estudanteId);
+            });
+
+        </script>
+    }

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<GestaoEstudantil.Models.Professor>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class="col-9">
+        <h2>@ViewBag.pageContex</h2>
+    </div>
+    <div class="col-3">
+        @Html.ActionLink("Adicionar Professor", "Create", "Professores", new { @class = "btn btn-primary" })
+    </div>
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumeroMc)
+        </th>
+        <th>Opções</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumeroMc)
+        </td>
+        <td>
+            <div class="btn-group" role="group" aria-label="Basic outlined example">
+                @Html.ActionLink("Edit", "Edit", new { id = item.IdProfessor }, new { @class = "btn btn-secondary" })
+                @Html.ActionLink("Detalhes", "Details", new { id = item.IdProfessor }, new { @class = "btn" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.IdProfessor }, new { @class = "btn btn-danger" })
+            </div>
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,39 @@
+﻿@model GestaoEstudantil.Models.Curso
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<div class="row">
+    <div class="col-9">
+        <h2>@ViewBag.pageContex</h2>
+    </div>
+</div>
+
+<h3>Tens certeza que desejas eliminar esse curso?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <div class="row">
+            <dt class="col-3">
+                @Html.DisplayNameFor(model => model.Nome)
+            </dt>
+
+            <dd class="col-9">
+                @Html.DisplayFor(model => model.Nome)
+            </dd>
+        </div>
+        
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+            @Html.ActionLink("Voltar", "Index", "Cursos", new { @class = "btn" })
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </div>
+    }
+</div>

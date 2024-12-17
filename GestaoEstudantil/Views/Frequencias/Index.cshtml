@@ -1,0 +1,37 @@
+﻿@model IEnumerable<GestaoEstudantil.Models.Frequencia>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class="col-9">
+        <h2>@ViewBag.pageContex</h2>
+    </div>
+    <div class="col-3">
+        @Html.ActionLink("Adicionar Frequência", "Create", "Frequencias", new { @class = "btn btn-primary" })
+    </div>
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>Opções</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nome)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-secondary" })
+            @Html.ActionLink("Detalhes", "Details", new { id = item.Id }, new { @class = "btn" })
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+        </td>
+    </tr>
+}
+
+</table>

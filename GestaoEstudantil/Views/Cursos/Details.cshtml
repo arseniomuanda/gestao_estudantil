@@ -1,0 +1,31 @@
+﻿@model GestaoEstudantil.Models.Curso
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+    <div class="col-9">
+        <h2>@ViewBag.pageContex</h2>
+    </div>
+</div>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        @Html.ActionLink("Voltar", "Index", "Cursos", new { @class = "btn" })
+        @Html.ActionLink("Editar", "Edit", "Cursos", new { id = Model.Id }, new { @class = "btn btn-secondary" })
+    </div>
+</p>
