@@ -204,4 +204,14 @@ namespace GestaoEstudantil.Models
         [Required][StringLength(128)] public string UserId { get; set; } 
     }
 
+    public class NotaFrequenciaDisciplina
+    {
+        public int IdNota { get; set; }
+        public double Valor { get; set; }
+        public int EstudanteId { get; set; }
+        public int FrequenciaId { get; set; }
+        public string FrequenciaNome { get; set; } // Nome da frequência
+        public int DisciplinaId { get; set; }
+        public string DisciplinaNome { get; set; } // Nome da disciplina
+    }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -204,6 +205,42 @@ namespace GestaoEstudantil.Controllers
             var estudante = db.Estudantes.Find(id);
             return View(estudante);
         }
+
+        public ActionResult GetNotasAluno(int id)
+        {
+            var disciplinasQuery = @" 
+                SELECT Disciplinas.* FROM EstudanteDisciplinas 
+                    RIGHT JOIN Disciplinas ON EstudanteDisciplinas.Disciplina_Id = Disciplinas.Id 
+                    WHERE EstudanteDisciplinas.Estudante_Id = @EstudanteId
+            ";
+            var disciplinas = db.Database.SqlQuery<Disciplina>(disciplinasQuery, new SqlParameter("@EstudanteId", id)).ToList();
+
+            string query = @"
+                SELECT 
+                    n.IdNota, 
+                    n.Valor, 
+                    n.EstudanteId, 
+                    n.FrequenciaId, 
+                    f.Nome AS FrequenciaNome,
+                    n.DisciplinaId, 
+                    d.Nome AS DisciplinaNome
+                FROM 
+                    Notas n
+                INNER JOIN 
+                    Frequencias f ON n.FrequenciaId = f.Id
+                INNER JOIN 
+                    Disciplinas d ON n.DisciplinaId = d.Id
+                WHERE 
+                    n.EstudanteId = @p0;";
+
+           var notas = db.Database.SqlQuery<NotaFrequenciaDisciplina>(
+                query,
+                new SqlParameter("@p0", id)
+            ).ToList();
+
+            return Json(new { disciplinas, notas }, JsonRequestBehavior.AllowGet);
+        }
+
 
         // POST: Estudantes/Delete/5
         [HttpPost, ActionName("Delete")]
