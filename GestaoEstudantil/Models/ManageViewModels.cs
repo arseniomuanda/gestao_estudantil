@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
@@ -163,6 +164,8 @@ namespace GestaoEstudantil.Models
         [Display(Name = "Número do MC")]
         public string NumeroMc { get; set; }
         public ICollection<Disciplina> Disciplinas { get; set; }
+        
+        public string UserId { get; set; }
     }
 
     public class Nota
@@ -191,6 +194,14 @@ namespace GestaoEstudantil.Models
         [Key]public int Id { get; set; }
         [Required]public string Nome { get; set; }
         public ICollection<Nota> Notas { get; set; }
+    }
+
+    public class AuditLog { 
+        [Key] public int Id { get; set; } 
+        [Required][StringLength(50)] public string Action { get; set; } 
+        [Required][StringLength(50)] public string TableName { get; set; } 
+        [Required] public DateTime Date { get; set; } 
+        [Required][StringLength(128)] public string UserId { get; set; } 
     }
 
 }

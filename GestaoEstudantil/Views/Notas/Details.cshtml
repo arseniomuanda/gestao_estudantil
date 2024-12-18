@@ -48,6 +48,8 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.IdNota }) |
-    @Html.ActionLink("Back to List", "Index")
+    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+        @Html.ActionLink("Voltar", "Index", "Notas", new { @class = "btn" })
+        @Html.ActionLink("Editar", "Edit", "Notas", new { id = Model.IdNota }, new { @class = "btn btn-secondary" })
+    </div>
 </p>

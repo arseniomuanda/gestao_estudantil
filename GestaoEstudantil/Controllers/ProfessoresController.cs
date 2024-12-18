@@ -80,6 +80,9 @@ namespace GestaoEstudantil.Controllers
             }
             ViewBag.page = "Professores";
             ViewBag.pageContex = professor.Nome;
+
+            ViewBag.UserId = new SelectList(db.Users, "Id", "UserName", professor.UserId);
+
             return View(professor);
         }
 
@@ -96,8 +99,12 @@ namespace GestaoEstudantil.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
             ViewBag.page = "Professores";
             ViewBag.pageContex = professor.Nome;
+
+            ViewBag.UserId = new SelectList(db.Users, "Id", "UserName", professor.UserId);
+
             return View(professor);
         }
 
