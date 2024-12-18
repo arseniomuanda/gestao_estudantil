@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using GestaoEstudantil.Models;
+using Microsoft.AspNet.Identity;
 
 namespace GestaoEstudantil.Controllers
 {
@@ -24,6 +25,8 @@ namespace GestaoEstudantil.Controllers
             return View(estudantes.ToList());
         }
 
+        private string GetCurrentUserId() { return User.Identity.GetUserId(); }
+
         // GET: Estudantes/Details/5
         public ActionResult Details(int? id)
         {
@@ -39,7 +42,13 @@ namespace GestaoEstudantil.Controllers
             ViewBag.page = "Estudantes";
             ViewBag.pageContex = estudante.NomeCompleto;
 
-            ViewBag.Disciplinas_list = new SelectList(db.Disciplinas, "Id", "Nome");
+            string userId = GetCurrentUserId();
+
+            //var professor = db.Professores.Where(e => e.UserId == 1).FirstOrDefault();
+
+            var disciplinas = db.Database.SqlQuery<Disciplina>("SELECT Disciplinas.* FROM EstudanteDisciplinas RIGHT JOIN Disciplinas ON EstudanteDisciplinas.Disciplina_Id = Disciplinas.Id WHERE EstudanteDisciplinas.Estudante_Id <> @p0 OR EstudanteDisciplinas.Estudante_Id IS NULL;", id).ToList();
+
+            ViewBag.Disciplinas_list = new SelectList(disciplinas, "Id", "Nome");
 
             return View(estudante);
         }

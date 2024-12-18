@@ -31,6 +31,7 @@ namespace GestaoEstudantil.Models
         public DbSet<Disciplina> Disciplinas { get; set; }
         public DbSet<Nota> Notas { get; set; }
         public DbSet<Frequencia> Frequencias { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder) { modelBuilder.Entity<Disciplina>().HasRequired(d => d.Professor).WithMany(p => p.Disciplinas).HasForeignKey(d => d.ProfessorId); base.OnModelCreating(modelBuilder); }
 

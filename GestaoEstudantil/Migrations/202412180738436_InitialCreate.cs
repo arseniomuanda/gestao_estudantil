@@ -81,6 +81,7 @@
                         IdProfessor = c.Int(nullable: false, identity: true),
                         Nome = c.String(nullable: false),
                         NumeroMc = c.String(nullable: false),
+                        UserId = c.String(),
                     })
                 .PrimaryKey(t => t.IdProfessor);
             

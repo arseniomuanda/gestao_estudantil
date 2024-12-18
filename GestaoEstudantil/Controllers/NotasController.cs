@@ -63,6 +63,15 @@ namespace GestaoEstudantil.Controllers
         public ActionResult Create([Bind(Include = "IdNota,Valor,EstudanteId,FrequenciaId,DisciplinaId")] Nota nota)
         {
             var disciplinasAluno = db.Database.SqlQuery<Disciplina>("SELECT Disciplinas.* FROM EstudanteDisciplinas INNER JOIN Disciplinas ON EstudanteDisciplinas.Disciplina_Id = Disciplinas.Id WHERE EstudanteDisciplinas.Estudante_Id = @p0", nota.EstudanteId).ToList();
+
+            var disciplinasAlunoNotas = db.Database.SqlQuery<Nota>("SELECT Notas.* FROM Notas WHERE Notas.EstudanteId = @p0 AND Notas.DisciplinaId = @p1", nota.EstudanteId, nota.DisciplinaId).ToList();
+
+            if (disciplinasAlunoNotas.Count() > 0)
+            {
+                ViewBag.ErrorMessage = "Esse estudante já tem uma nota nessa disciplina!";
+                return View("Error");
+            }
+
             if (disciplinasAluno.Count() > 0)
             {
                 if (ModelState.IsValid)
