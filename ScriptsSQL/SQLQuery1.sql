@@ -32,3 +32,6 @@ PIVOT
 
 -- Executar a consulta dinâmica
 EXEC sp_executesql @query;
+
+
+select Frequencias.Nome, Notas.Valor from Notas inner join Frequencias on Notas.FrequenciaId = Frequencias.Id
