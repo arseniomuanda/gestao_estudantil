@@ -202,6 +202,7 @@ namespace GestaoEstudantil.Controllers
         }
 
         public ActionResult EstudanteRelatorio(int id) {
+            ViewBag.page = "Estudantes";
             var estudante = db.Estudantes.Find(id);
             return View(estudante);
         }
