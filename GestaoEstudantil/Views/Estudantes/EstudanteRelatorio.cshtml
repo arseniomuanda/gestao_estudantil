@@ -1,9 +1,8 @@
 ﻿@model GestaoEstudantil.Models.Estudante
 
 @{
-    ViewBag.Title = "Notas do estudante";
+    ViewBag.Title = "Resumo do Estudante";
 }
-
 <div class="container mt-5">
     <h1 class="mb-4">Estudante: @Model.NomeCompleto</h1>
     <button id="printBtn" class="btn btn-primary mb-4">Imprimir PDF</button>
@@ -24,8 +23,8 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Disciplina Nome</th>
-                <th>Frequência Nome</th>
+                <th>Disciplina</th>
+                <th>Frequência</th>
                 <th>Valor</th>
             </tr>
         </thead>
@@ -67,4 +66,3 @@
             });
         });
     </script>
-}

@@ -214,4 +214,9 @@ namespace GestaoEstudantil.Models
         public int DisciplinaId { get; set; }
         public string DisciplinaNome { get; set; } // Nome da disciplina
     }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 81ab022a6be1dfba70c5c0a8f077c166302a700a
 }
