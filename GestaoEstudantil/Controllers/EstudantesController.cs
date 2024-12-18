@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
+using System.Dynamic;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -117,7 +119,6 @@ namespace GestaoEstudantil.Controllers
             }
         }
 
-
         // GET: Estudantes/Create
         public ActionResult Create()
         {
@@ -203,6 +204,46 @@ namespace GestaoEstudantil.Controllers
         public ActionResult EstudanteRelatorio(int id) {
             var estudante = db.Estudantes.Find(id);
             return View(estudante);
+        }
+
+        
+        public ActionResult GetNotasAluno(int id)
+        {
+            // Consulta para obter Disciplinas com RIGHT JOIN
+            var disciplinasQuery = @"
+            SELECT Disciplinas.* 
+            FROM EstudanteDisciplinas 
+            INNER JOIN Disciplinas ON EstudanteDisciplinas.Disciplina_Id = Disciplinas.Id 
+            WHERE EstudanteDisciplinas.Estudante_Id = @EstudanteId";
+
+            var disciplinas = db.Database.SqlQuery<Disciplina>(disciplinasQuery, new SqlParameter("@EstudanteId", id)).ToList();
+
+            // Consulta dinâmica para obter Notas
+            var frequencias = db.Database.SqlQuery<Frequencia>("Select * From Frequencias").Distinct().ToList();
+
+            string query = @"
+                SELECT 
+                    n.IdNota, 
+                    n.Valor, 
+                    n.EstudanteId, 
+                    n.FrequenciaId, 
+                    f.Nome AS FrequenciaNome,
+                    n.DisciplinaId, 
+                    d.Nome AS DisciplinaNome
+                FROM 
+                    Notas n
+                INNER JOIN 
+                    Frequencias f ON n.FrequenciaId = f.Id
+                INNER JOIN 
+                    Disciplinas d ON n.DisciplinaId = d.Id
+                WHERE 
+                    n.EstudanteId = @p0";
+
+
+                var notas = db.Database.SqlQuery<NotaFrequenciaDisciplina>(query, id);
+
+            // Retornar ambos os resultados como JSON
+            return Json(new { disciplinas, notas }, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Estudantes/Delete/5

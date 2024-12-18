@@ -1,1 +1,70 @@
-﻿
+﻿@model GestaoEstudantil.Models.Estudante
+
+@{
+    ViewBag.Title = "Resumo do Estudante";
+}
+<div class="container mt-5">
+    <h1 class="mb-4">Estudante: @Model.NomeCompleto</h1>
+    <button id="printBtn" class="btn btn-primary mb-4">Imprimir PDF</button>
+
+    <h2>Disciplinas</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Código</th>
+            </tr>
+        </thead>
+        <tbody id="disciplinasTable">
+        </tbody>
+    </table>
+
+    <h2>Notas</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Disciplina</th>
+                <th>Frequência</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody id="notasTable">
+        </tbody>
+    </table>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '/Estudantes/GetNotasAluno/@Model.Id',
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var disciplinasTable = $('#disciplinasTable');
+                    var notasTable = $('#notasTable');
+
+                    data.disciplinas.forEach(function(disciplina) {
+                        disciplinasTable.append(
+                            '<tr><td>' + disciplina.Nome + '</td><td>' + disciplina.CodigoDisciplina + '</td></tr>'
+                        );
+                    });
+
+                    data.notas.forEach(function(nota) {
+                        notasTable.append(
+                            '<tr><td>' + nota.DisciplinaNome + '</td><td>' + nota.FrequenciaNome + '</td><td>' + nota.Valor + '</td></tr>'
+                        );
+                    });
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+
+            $('#printBtn').click(function() {
+                var element = $('.container')[0];
+                html2pdf().from(element).save();
+            });
+        });
+    </script>
+}
